@@ -7,9 +7,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/residenthiago2011/DSH-Save-KV-Cache.git"
+    "url": "git+https://github.com/residenthiago2011/DSH-Save-KV-Cache.git",
+    "directory": "plugin"
   },
-  "homepage": "https://github.com/residenthiago2011/DSH-Save-KV-Cache#readme",
+  "homepage": "https://github.com/residenthiago2011/DSH-Save-KV-Cache/tree/main/plugin#readme",
   "bugs": {
     "url": "https://github.com/residenthiago2011/DSH-Save-KV-Cache/issues"
   },
@@ -17,9 +18,14 @@
     "lib",
     "locale",
     "icon.svg",
-    "cordis.patch.yml",
-    "INSTALL.md"
+    "cordis.patch.yml"
   ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
   "publishConfig": {
     "access": "public"
   },

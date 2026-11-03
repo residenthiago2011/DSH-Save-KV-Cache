@@ -70,8 +70,21 @@ session object, so the effective filename is the session ID (e.g.
 
 - DeepSeek Harness (DSH) `0.2.0-rc.2+`
 - llama.cpp server with `--slot-save-path` configured
-- Plugin linked into the profile's `node_modules` (see INSTALL.md)
+- Plugin installed in the profile's `node_modules` (see INSTALL.md)
 
 ## Installation
 
-See [INSTALL.md](INSTALL.md).
+From npm:
+
+```sh
+dsh plugin --profile <profile> add @residenthiago/dsh-save-kv-cache
+```
+
+Device-specific deployment (manual copy/symlink, profile bundle wiring):
+see [INSTALL.md](INSTALL.md).
+
+## Repository layout
+
+The npm package lives in [`plugin/`](plugin) (`package.json`, `lib/`,
+`locale/`, bundle patch, package README/LICENSE, `test/`); this root holds the
+full documentation — this README and INSTALL.md.
