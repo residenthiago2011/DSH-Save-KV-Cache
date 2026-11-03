@@ -39,6 +39,31 @@ No `cordis-plugin-loader` patch is required with this symlink on DSH
 `internal = ModuleLoader.fromInternal();` and the plugin loads correctly.
 Older DSH (`0.1.x`) needed that line changed to `internal = undefined;`.
 
+## 2b. Bundle Install (Plugin Panel) — dsh 0.2.1-rc.3+
+
+The plugin is also a **bundle**: its `package.json` declares
+`dsh.bundle.patch → ./cordis.patch.yml`, so instead of the manual edits in
+§3–§4 you can install it the way the Plugins page does:
+
+1. Make the package a dependency of the profile
+   (`profiles/web/package.json` → `"@deepseek-ai/dsh-save-kv-cache": "*"`
+   with the package present under `profiles/web/node_modules/`).
+2. Select it in the manifest:
+   `{ "dsh": { "profile": { "bundles": ["@deepseek-ai/dsh-save-kv-cache"] } } }`
+   (the bundle's own `cordis.patch.yml` then supplies the
+   `- id: save-kv-cache` row — do **not** also add that row to the profile
+   patch, duplicate ids conflict).
+3. Restart DSH.
+
+With the bundle metadata in place the Plugins page lists it under **Personal**
+(display name "Save KV-Cache" from `locale/en|zh.json`, `meta.title`) with the
+same enable/disable toggle the built-ins have: toggling writes the profile
+bundle selection, and per-row switches write `disabled` flags onto the ledger.
+
+The plugin manager silently drops profile dependencies that lack
+`dsh.bundle.patch` — a plain config-row install keeps running but stays
+invisible to the panel.
+
 ## 3. Patch UI Commands (Icons & Labels)
 
 File: `$DSH/app/node_modules/@deepseek-ai/dsh-client-ui-commands/lib/client.js`
@@ -96,6 +121,9 @@ Both icons are imported from `@deepseek-ai/dsh-client-ui-primitives`.
 ```
 
 ### 4b. `profiles/web/cordis.patch.yml`
+
+Legacy row insert (bundle install from §2b supplies this row itself — skip it
+there to avoid duplicate ids):
 
 ```yaml
 - insert:

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "保存 KV 缓存",
+    "description": "在当前服务器上保存与恢复 llama.cpp 的 KV 缓存槽位，并在每轮结束后自动保存。"
+  }
+}

@@ -1,0 +1,10 @@
+# Bundle patch for the plugin panel / plugin manager.
+# Declared in package.json as dsh.bundle.patch; the plugin manager lists this
+# package as an installed bundle (its "Personal" group) and composes this row
+# on startup for as long as the bundle is selected in the profile manifest:
+#   { "dsh": { "profile": { "bundles": ["@deepseek-ai/dsh-save-kv-cache"] } } }
+# Keep the row id stable ("save-kv-cache") so existing config-ledger rows and
+# runtime entry ids keep resolving after an update.
+- insert:
+    - id: save-kv-cache
+      name: '@deepseek-ai/dsh-save-kv-cache'

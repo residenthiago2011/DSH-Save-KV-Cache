@@ -3,5 +3,10 @@
   "description": "Save KV cache slot to disk on llama.cpp server, with auto-save on turn/end",
   "version": "0.1.6-alpha.2",
   "type": "module",
-  "main": "lib/index.js"
+  "main": "lib/index.js",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
 }

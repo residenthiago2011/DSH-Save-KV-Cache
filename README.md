@@ -7,6 +7,14 @@ Save and load KV cache slots on a llama.cpp server from within DeepSeek Harness 
 - **`/save-kv-cache`** — Save the current KV cache slot on the active llama.cpp server as `session-<id>.bin`. Download icon.
 - **`/load-kv-cache`** — Restore a saved KV cache file on the active llama.cpp server. Data icon.
 - **Auto-save** — Fires on every `turn/end` event and saves slot `0` as `session-<id>.bin`.
+- **Capability probe** — Before saving, the plugin probes `POST /slots/0?action=restore` (10-minute
+  per-server cache). On servers without `--slot-save-path` (501 `not_supported_error` or a
+  router-style 404) auto-save stays **dormant** — no blind POST traffic at every turn — and the
+  manual commands answer with the fix ("start llama-server with `--slot-save-path`") instead of a
+  raw `404 The model 'None' does not exist`.
+- **Plugin panel** — Ships `dsh.bundle.patch` + `locale/en|zh.json` + `icon.svg`, so Plugins lists it
+  under **Personal** as "Save KV-Cache" (保存 KV 缓存) with the same enable/disable toggle as the
+  built-in plugins.
 
 ## How It Works
 

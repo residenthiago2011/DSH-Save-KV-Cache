@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Save KV-Cache",
+    "description": "Save and restore llama.cpp KV-cache slots on the active server; auto-saves after each turn."
+  }
+}
