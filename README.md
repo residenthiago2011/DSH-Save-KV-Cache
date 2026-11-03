@@ -64,7 +64,7 @@ selection exists yet.
 The code tries `session.title`, then falls back to `String(session.id)`. In DSH
 `0.2.0-rc.2` the title is a session event (`session/title`), not a property on the
 session object, so the effective filename is the session ID (e.g.
-`session-1acd72d2-c0a3-45bb-88cb-4c23edf8aed8.bin`).
+`session-<session-uuid>.bin`).
 
 ## Requirements
 

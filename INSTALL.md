@@ -1,14 +1,14 @@
 # Installation Guide
 
-Deployment target: DSH `0.2.0-rc.2` on Android (Moto G8) with llama.cpp on a
-separate device (Moto G30).
+Deployment target: DSH `0.2.0-rc.2` on Android, with llama.cpp running on the
+same host or a separate one.
 
 ## 1. Copy Plugin Files
 
 Copy the plugin into the DSH app's `node_modules`:
 
 ```bash
-DSH=/data/local/deepseek-harness
+DSH=/path/to/dsh-install
 cp -r dsh-save-kv-cache "$DSH/app/node_modules/@residenthiago/"
 chown -R root:root "$DSH/app/node_modules/@residenthiago/dsh-save-kv-cache"
 chmod -R 755 "$DSH/app/node_modules/@residenthiago/dsh-save-kv-cache"
@@ -131,8 +131,8 @@ there to avoid duplicate ids):
       name: '@residenthiago/dsh-save-kv-cache'
 ```
 
-The deployed profile also disables `hmr` and `office-to-pdf`, binds the
-webserver to `0.0.0.0:3080`, and defines the `llm-pi-ai` providers. The plugin
+The profile typically also disables `hmr` and `office-to-pdf`, binds the
+webserver to a LAN address, and defines the `llm-pi-ai` providers. The plugin
 uses the **active** provider from the session's latest request header (or
 `model/selection` event), not the first provider in `llm-pi-ai.providers`.
 
@@ -141,19 +141,18 @@ uses the **active** provider from the session's latest request header (or
 Start the model server with a slot save directory:
 
 ```bash
-llama-server -m /data/local/tmp/llama/model.gguf \
+llama-server -m /path/to/model.gguf \
   --host 0.0.0.0 --port 11434 \
-  --slot-save-path /data/local/tmp/llama/kv-slots
+  --slot-save-path /path/to/kv-slots
 ```
 
-The deployed G30 uses:
+Give each server/model its own slot directory (e.g. `kv-slots-<model>`) so
+caches from different servers never collide.
 
-```
---slot-save-path /data/local/tmp/llama/kv-slots-bonsai
-```
-
-The G8's local llama.cpp on port `8081` is started **without**
-`--slot-save-path`, so saving against the `laya` provider fails with HTTP 400.
+A server started **without** `--slot-save-path` has no writable `/slots`
+endpoint: `POST /slots/0?action=save` answers `501 not_supported_error`, and
+the plugin's capability probe keeps auto-save dormant there (the manual
+commands report the fix instead of a raw error).
 
 ## 6. Configure DSH Settings
 
@@ -164,23 +163,25 @@ one the plugin talks to:
 ```yaml
 llm-pi-ai:
   providers:
-    moto-g30:
-      baseURL: http://192.168.1.68:11434/v1
+    llama-remote:
+      baseURL: http://<server-host-or-ip>:11434/v1
       models:
-        - id: /data/local/tmp/llama/Ternary-Bonsai-2-2B-PQ2_0.gguf
-    desktop:
-      baseURL: http://192.168.1.65:11434
+        - id: /path/to/model.gguf
+    llama-desktop:
+      baseURL: http://<host>:11434
       models:
-        - id: I:\Language-Models\Prism-ML\4B\Ternary-Bonsai-2-4B-Q2_0.gguf
+        - id: C:\path\to\model.gguf
 ```
 
-The provider whose model is active must be reachable from the G8, and its
-llama.cpp process must have `--slot-save-path` configured.
+The provider whose model is active must be reachable from the host running
+DSH, and its llama.cpp process must have `--slot-save-path` configured.
 
 ## 7. Restart DSH
 
+Restart the DSH service however your deployment starts it, e.g.:
+
 ```bash
-adb -s <device> shell su 0 sh /data/local/deepseek-harness/start-dsh.sh
+sh /path/to/dsh-install/start-dsh.sh
 ```
 
 ## Verification
@@ -190,16 +191,16 @@ After restart, type `/` in DSH. You should see:
 - **Save Session** — download icon
 - **Load Session** — data icon
 
-Saved caches land in the **active** server's slot directory. For the Moto G30:
+Saved caches land in the **active** server's slot directory:
 
 ```bash
-adb -s ZF523HDBQQ shell ls -la /data/local/tmp/llama/kv-slots-bonsai
+ls -la /path/to/kv-slots
 ```
 
-For the desktop provider, check its configured save directory, for example:
+On a Windows host, check the configured save directory, for example:
 
 ```powershell
-Get-ChildItem 'I:\Language-Models\Prism-ML\4B\KV-Cache'
+Get-ChildItem 'C:\path\to\KV-Cache'
 ```
 
 Expected names are `session-<session-id>.bin` (titles are not resolved on DSH
