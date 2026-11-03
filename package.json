@@ -1,9 +1,28 @@
 {
-  "name": "@deepseek-ai/dsh-save-kv-cache",
+  "name": "@residenthiago/dsh-save-kv-cache",
   "description": "Save KV cache slot to disk on llama.cpp server, with auto-save on turn/end",
   "version": "0.2.0-alpha.1",
   "type": "module",
   "main": "lib/index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/residenthiago2011/DSH-Save-KV-Cache.git"
+  },
+  "homepage": "https://github.com/residenthiago2011/DSH-Save-KV-Cache#readme",
+  "bugs": {
+    "url": "https://github.com/residenthiago2011/DSH-Save-KV-Cache/issues"
+  },
+  "files": [
+    "lib",
+    "locale",
+    "icon.svg",
+    "cordis.patch.yml",
+    "INSTALL.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"

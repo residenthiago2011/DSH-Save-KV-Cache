@@ -9,15 +9,15 @@ Copy the plugin into the DSH app's `node_modules`:
 
 ```bash
 DSH=/data/local/deepseek-harness
-cp -r dsh-save-kv-cache "$DSH/app/node_modules/@deepseek-ai/"
-chown -R root:root "$DSH/app/node_modules/@deepseek-ai/dsh-save-kv-cache"
-chmod -R 755 "$DSH/app/node_modules/@deepseek-ai/dsh-save-kv-cache"
+cp -r dsh-save-kv-cache "$DSH/app/node_modules/@residenthiago/"
+chown -R root:root "$DSH/app/node_modules/@residenthiago/dsh-save-kv-cache"
+chmod -R 755 "$DSH/app/node_modules/@residenthiago/dsh-save-kv-cache"
 ```
 
 Expected layout:
 
 ```
-$DSH/app/node_modules/@deepseek-ai/dsh-save-kv-cache/
+$DSH/app/node_modules/@residenthiago/dsh-save-kv-cache/
 ├── package.json
 └── lib/
     ├── index.js
@@ -29,9 +29,9 @@ $DSH/app/node_modules/@deepseek-ai/dsh-save-kv-cache/
 The profile resolves the package through its own `node_modules`:
 
 ```bash
-mkdir -p "$DSH/home/profiles/web/node_modules/@deepseek-ai"
-ln -sfn "$DSH/app/node_modules/@deepseek-ai/dsh-save-kv-cache" \
-  "$DSH/home/profiles/web/node_modules/@deepseek-ai/dsh-save-kv-cache"
+mkdir -p "$DSH/home/profiles/web/node_modules/@residenthiago"
+ln -sfn "$DSH/app/node_modules/@residenthiago/dsh-save-kv-cache" \
+  "$DSH/home/profiles/web/node_modules/@residenthiago/dsh-save-kv-cache"
 ```
 
 No `cordis-plugin-loader` patch is required with this symlink on DSH
@@ -46,10 +46,10 @@ The plugin is also a **bundle**: its `package.json` declares
 §3–§4 you can install it the way the Plugins page does:
 
 1. Make the package a dependency of the profile
-   (`profiles/web/package.json` → `"@deepseek-ai/dsh-save-kv-cache": "*"`
+   (`profiles/web/package.json` → `"@residenthiago/dsh-save-kv-cache": "*"`
    with the package present under `profiles/web/node_modules/`).
 2. Select it in the manifest:
-   `{ "dsh": { "profile": { "bundles": ["@deepseek-ai/dsh-save-kv-cache"] } } }`
+   `{ "dsh": { "profile": { "bundles": ["@residenthiago/dsh-save-kv-cache"] } } }`
    (the bundle's own `cordis.patch.yml` then supplies the
    `- id: save-kv-cache` row — do **not** also add that row to the profile
    patch, duplicate ids conflict).
@@ -79,8 +79,8 @@ commands: ["compact", "permission", "model", "export", "save-kv-cache", "load-kv
 These values are command `definitionId`s (not import paths):
 
 ```javascript
-"save-kv-cache": "@deepseek-ai/dsh-save-kv-cache",
-"load-kv-cache": "@deepseek-ai/dsh-save-kv-cache/load"
+"save-kv-cache": "@residenthiago/dsh-save-kv-cache",
+"load-kv-cache": "@residenthiago/dsh-save-kv-cache/load"
 ```
 
 ### 3c. Add to `HOST_FACES`
@@ -115,7 +115,7 @@ Both icons are imported from `@deepseek-ai/dsh-client-ui-primitives`.
 ```json
 {
   "dependencies": {
-    "@deepseek-ai/dsh-save-kv-cache": "*"
+    "@residenthiago/dsh-save-kv-cache": "*"
   }
 }
 ```
@@ -128,7 +128,7 @@ there to avoid duplicate ids):
 ```yaml
 - insert:
     - id: save-kv-cache
-      name: '@deepseek-ai/dsh-save-kv-cache'
+      name: '@residenthiago/dsh-save-kv-cache'
 ```
 
 The deployed profile also disables `hmr` and `office-to-pdf`, binds the
