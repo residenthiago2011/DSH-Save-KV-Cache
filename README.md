@@ -2,6 +2,11 @@
 
 Save and load KV cache slots on a llama.cpp server from within DeepSeek Harness (DSH).
 
+> **0.2.0** adds a slot capability probe (auto-save goes dormant on servers without
+> `--slot-save-path` instead of posting blind 404s, with honest command errors) and
+> bundle metadata for the DSH Plugins panel ("Save KV-Cache" under Personal, with the
+> standard toggle).
+
 ## Features
 
 - **`/save-kv-cache`** — Save the current KV cache slot on the active llama.cpp server as `session-<id>.bin`. Download icon.
