@@ -15,6 +15,23 @@ Save and load KV cache slots on a llama.cpp server from within
 
 ## Install
 
+### From a GitHub Release (plugin panel / tarball URL)
+
+DeepSeek Harness → **Plugins** → **Add plugin** → Registry: **Official npm
+registry** → paste:
+
+```text
+https://github.com/residenthiago2011/DSH-Save-KV-Cache/releases/download/v0.2.0-alpha.1/residenthiago-dsh-save-kv-cache-0.2.0-alpha.1.tgz
+```
+
+Pick the newest tag from the
+[Releases page](https://github.com/residenthiago2011/DSH-Save-KV-Cache/releases);
+each release also carries a `SHA256SUMS.txt` for `sha256sum -c`. To remove the
+plugin later, open its card → **Uninstall** (the profile must run with HMR
+enabled for the panel uninstall; otherwise use `dsh plugin remove`).
+
+### From a registry package
+
 ```sh
 dsh plugin --profile <profile> add @residenthiago/dsh-save-kv-cache
 ```

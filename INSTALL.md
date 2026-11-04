@@ -41,6 +41,18 @@ Older DSH (`0.1.x`) needed that line changed to `internal = undefined;`.
 
 ## 2b. Bundle Install (Plugin Panel) — dsh 0.2.1-rc.3+
 
+The easiest install is a tarball release straight through the panel:
+**Plugins → Add plugin** → paste
+
+```text
+https://github.com/residenthiago2011/DSH-Save-KV-Cache/releases/download/v0.2.0-alpha.1/residenthiago-dsh-save-kv-cache-0.2.0-alpha.1.tgz
+```
+
+(see the
+[Releases page](https://github.com/residenthiago2011/DSH-Save-KV-Cache/releases)
+for the newest tag), then select the bundle on the Plugins page. The panel
+writes the profile-manifest entries described below for you.
+
 The plugin is also a **bundle**: its `package.json` declares
 `dsh.bundle.patch → ./cordis.patch.yml`, so instead of the manual edits in
 §3–§4 you can install it the way the Plugins page does:
