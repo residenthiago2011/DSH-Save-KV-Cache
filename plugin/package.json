@@ -1,7 +1,7 @@
 {
   "name": "@residenthiago/dsh-save-kv-cache",
   "description": "Save KV cache slot to disk on llama.cpp server, with auto-save on turn/end",
-  "version": "0.2.0-alpha.1",
+  "version": "0.2.0-alpha.2",
   "type": "module",
   "main": "lib/index.js",
   "license": "MIT",

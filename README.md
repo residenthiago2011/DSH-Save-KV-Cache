@@ -2,21 +2,22 @@
 
 Save and load KV cache slots on a llama.cpp server from within DeepSeek Harness (DSH).
 
-> **0.2.0** adds a slot capability probe (auto-save goes dormant on servers without
-> `--slot-save-path` instead of posting blind 404s, with honest command errors) and
-> bundle metadata for the DSH Plugins panel ("Save KV-Cache" under Personal, with the
-> standard toggle).
+> Version history and fix notes live in [CHANGELOG.md](CHANGELOG.md).
 
 ## Features
 
 - **`/save-kv-cache`** — Save the current KV cache slot on the active llama.cpp server as `session-<id>.bin`. Download icon.
 - **`/load-kv-cache`** — Restore a saved KV cache file on the active llama.cpp server. Data icon.
 - **Auto-save** — Fires on every `turn/end` event and saves slot `0` as `session-<id>.bin`.
-- **Capability probe** — Before saving, the plugin probes `POST /slots/0?action=restore` (10-minute
-  per-server cache). On servers without `--slot-save-path` (501 `not_supported_error` or a
-  router-style 404) auto-save stays **dormant** — no blind POST traffic at every turn — and the
-  manual commands answer with the fix ("start llama-server with `--slot-save-path`") instead of a
-  raw `404 The model 'None' does not exist`.
+- **Capability probe** — Before saving, the plugin probes the slot endpoint once per server
+  (10-minute cache) with an **empty** `POST /slots/0?action=restore` body `{}` — no filename is
+  ever transmitted. On servers without `--slot-save-path` (501 `not_supported_error`) auto-save
+  stays **dormant** — no blind POST traffic at every turn — and the manual commands answer with
+  the fix ("start llama-server with `--slot-save-path`") instead of a raw `404 The model 'None'
+  does not exist`. Only a JSON answer counts as supported, and **remote/third-party endpoints
+  are never probed or written to** (slots exist only on a llama-server on loopback/LAN), so a
+  hosted API that answers every path with `200 HTML` can no longer be mistaken for a
+  slot-capable server.
 - **Plugin panel** — Ships `dsh.bundle.patch` + `locale/en|zh.json` + `icon.svg`, so Plugins lists it
   under **Personal** as "Save KV-Cache" (保存 KV 缓存) with the same enable/disable toggle as the
   built-in plugins.
@@ -87,4 +88,5 @@ see [INSTALL.md](INSTALL.md).
 
 The npm package lives in [`plugin/`](plugin) (`package.json`, `lib/`,
 `locale/`, bundle patch, package README/LICENSE, `test/`); this root holds the
-full documentation — this README and INSTALL.md.
+full documentation — this README, [INSTALL.md](INSTALL.md), and
+[CHANGELOG.md](CHANGELOG.md).

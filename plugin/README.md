@@ -7,8 +7,9 @@ Save and load KV cache slots on a llama.cpp server from within
 - **`/load-kv-cache`** — restore a saved slot file.
 - **Auto-save** — fires on every `turn/end` for the session's active provider.
 - **Capability probe** — servers without `--slot-save-path` are detected once
-  (10-minute cache): auto-save stays dormant and the manual commands answer
-  with the fix instead of a raw 404.
+  (10-minute cache, empty-body POST): auto-save stays dormant and the manual
+  commands answer with the fix instead of a raw 404. Only JSON answers count as
+  supported, and remote/third-party endpoints are never probed or saved to.
 - **Plugin panel** — ships `dsh.bundle.patch` + `locale/en|zh.json` +
   `icon.svg`, so Plugins lists it under **Personal** as "Save KV-Cache" with
   the standard enable/disable toggle.
@@ -51,6 +52,8 @@ Full documentation — how the commands and the probe work, provider selection,
 filename rules, and device deployment — lives in the repository's
 [README](https://github.com/residenthiago2011/DSH-Save-KV-Cache#readme) and
 [INSTALL.md](https://github.com/residenthiago2011/DSH-Save-KV-Cache/blob/main/INSTALL.md).
+Version history and fix notes: repository
+[CHANGELOG.md](https://github.com/residenthiago2011/DSH-Save-KV-Cache/blob/main/CHANGELOG.md).
 
 ```sh
 npm test    # module shape + command registration (node --test)
