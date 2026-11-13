@@ -5,6 +5,43 @@ All notable changes to the **Save KV-Cache** plugin
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and versions follow [SemVer](https://semver.org/).
 
+## 0.2.0-alpha.3 — 2026-11-12
+
+### Added
+- **Client half restores the `/` menu face.** The plugin now ships
+  `lib/client.js` — a `window.__ModuleLoader__` client bundle declared through
+  `dsh.client` and `exports["./client"]`. It extends
+  `ctx.commandUi.candidates` so the two host commands carry their localized
+  label, description, and glyph (**Save Session** / **Load Session**, download /
+  data icons) on DSH `0.2.2-rc.1`, where `builtinRowFace()` only knows the six
+  first-party `definitionId`s. Dispatch is untouched: the host commands keep
+  their catalog row, argument claim, and lifecycle.
+- Ships `lib/types/` (host and client declaration stubs) so the new `exports`
+  map carries real type entry points.
+
+### Why a client bundle and not `ctx.commandUi.register()`
+`CommandContribution` cannot be used here: a contribution whose `name` matches
+a host command throws `ui-commands: contribution /<name> collides with a host
+command` during candidate synthesis, which takes the whole `/` menu down.
+`ctx.commandUi.decorate()` only replaces bare-invocation dispatch — candidate
+synthesis never reads decorations, so the row face is unchanged. DSH `0.2.2-rc.1`
+and `rc.2` expose no face API; upstream discussion
+[#10143](https://github.com/deepseek-ai/deepseek-harness/discussions/10143)
+requests exactly that surface (`ctx.commandUi.face({ name, icon, label })`) and
+is unimplemented.
+
+### Notes
+- The bundle is served from `node_modules` at runtime, so it survives a harness
+  `node_modules` rebuild — the failure mode that destroyed the previous hand
+  patch to `dsh-client-ui-commands/lib/client.js`.
+- Ranking runs inside `candidates`, so the injected label does not participate
+  in `rankByName`: name-based queries (`/save`, `/load`) are unaffected, while a
+  title-only query (`/session`) no longer matches the row.
+- English copy is the terminal fallback when the `locale` service is absent; the
+  `zh` dictionary localizes the same keys when it is present.
+- A missing `@deepseek-ai/dsh-client-ui-primitives` seed degrades to labels only
+  instead of failing the client half.
+
 ## 0.2.0-alpha.2 — 2026-11-11
 
 ### Fixed

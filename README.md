@@ -21,6 +21,28 @@ Save and load KV cache slots on a llama.cpp server from within DeepSeek Harness 
 - **Plugin panel** — Ships `dsh.bundle.patch` + `locale/en|zh.json` + `icon.svg`, so Plugins lists it
   under **Personal** as "Save KV-Cache" (保存 KV 缓存) with the same enable/disable toggle as the
   built-in plugins.
+- **Menu face (client half)** — Ships a `dsh.client` bundle (`lib/client.js`) that gives both
+  commands their `/` menu label, description, and glyph on DSH `0.2.2-rc.1`, where the harness only
+  assigns faces to first-party commands. It is served from `node_modules` at runtime, so it survives
+  a harness `node_modules` rebuild.
+
+## Menu Face
+
+DSH `0.2.2-rc.1` builds `/` menu rows through `builtinRowFace()`, which only knows six first-party
+`definitionId`s; every other host command falls through to `{ description }` and renders with an
+empty glyph. A client contribution cannot be used instead — `ctx.commandUi.register()` throws
+`contribution /<name> collides with a host command` when the name is already a host command, and
+`ctx.commandUi.decorate()` changes only bare-invocation dispatch, never the row face. There is no
+face API in `0.2.2-rc.1` or `rc.2` (upstream discussion
+[#10143](https://github.com/deepseek-ai/deepseek-harness/discussions/10143) requests one and is
+unimplemented).
+
+So the plugin ships a small client bundle that extends the one hook which actually builds the rows —
+`ctx.commandUi.candidates` — and adds `label`, `description`, and `icon` for `save-kv-cache` and
+`load-kv-cache`. Dispatch is untouched: the host commands keep their catalog row, their argument
+claim, and their lifecycle logging. The bundle is authored directly in the
+`window.__ModuleLoader__` format tsdown emits for first-party `lib/client.js` and is served from
+`node_modules` at runtime, so a harness upgrade that rebuilds `node_modules` no longer removes it.
 
 ## How It Works
 

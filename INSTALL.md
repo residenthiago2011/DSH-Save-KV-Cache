@@ -76,49 +76,22 @@ The plugin manager silently drops profile dependencies that lack
 `dsh.bundle.patch` — a plain config-row install keeps running but stays
 invisible to the panel.
 
-## 3. Patch UI Commands (Icons & Labels)
+## 3. Menu Icons & Labels (built in — no patching)
 
-File: `$DSH/app/node_modules/@deepseek-ai/dsh-client-ui-commands/lib/client.js`
+Since `0.2.0-alpha.3` the plugin ships its own client half (`lib/client.js`,
+declared through `dsh.client` + `exports["./client"]`). It extends
+`ctx.commandUi.candidates`, so both commands render with their localized label,
+description, and glyph on DSH `0.2.2-rc.1` — no harness file has to be edited.
 
-### 3a. Add to `SECTION_ROWS.commands`
-
-```javascript
-commands: ["compact", "permission", "model", "export", "save-kv-cache", "load-kv-cache"]
-```
-
-### 3b. Add to `BUILTINS`
-
-These values are command `definitionId`s (not import paths):
-
-```javascript
-"save-kv-cache": "@residenthiago/dsh-save-kv-cache",
-"load-kv-cache": "@residenthiago/dsh-save-kv-cache/load"
-```
-
-### 3c. Add to `HOST_FACES`
-
-```javascript
-hostFace("save-kv-cache", IconDownloadOutlineRegular),
-hostFace("load-kv-cache", IconDataOutlineRegular)
-```
-
-Both icons are imported from `@deepseek-ai/dsh-client-ui-primitives`.
-
-### 3d. Add locale strings (Chinese + English)
-
-```javascript
-// Chinese:
-"label.save-kv-cache": "保存会话",
-"label.load-kv-cache": "加载会话",
-"description.save-kv-cache": "保存 KV 缓存到 llama.cpp 服务器",
-"description.load-kv-cache": "从文件加载 KV 缓存到当前会话"
-
-// English:
-"label.save-kv-cache": "Save Session",
-"label.load-kv-cache": "Load Session",
-"description.save-kv-cache": "Save KV cache slot to disk on llama.cpp server",
-"description.load-kv-cache": "Load a saved KV cache from file into the current session"
-```
+Earlier releases required a hand patch to
+`$DSH/app/node_modules/@deepseek-ai/dsh-client-ui-commands/lib/client.js`
+(`SECTION_ROWS.commands`, `BUILTINS`, `HOST_FACES`, plus the inline EN/ZH
+dictionaries). That patch was wiped whenever the harness rebuilt
+`node_modules`, which is exactly what lost the icons on the
+`0.2.1-rc.3 → 0.2.2-rc.1` upgrade. **Do not re-apply it**: the client half
+covers the same copy and icons. If you are upgrading from a release that
+carried the hand patch, restore the stock `client.js` from the npm tarball so
+only the client half supplies the face.
 
 ## 4. Configure the DSH Profile
 
